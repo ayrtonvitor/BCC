@@ -5,8 +5,13 @@
 
 import scrapy
 
+class Section(scrapy.Item):
+    url = scrapy.Field()
+    title = scrapy.Field()
+    content = scrapy.Field()
+    is_placeholder = scrapy.Field()
 
-class BccItem(scrapy.Item):
-    # define the fields for your item here like:
-    # name = scrapy.Field()
-    pass
+class ClassMainPage(scrapy.Item):
+    url = scrapy.Field()
+    title = scrapy.Field()
+    content = Section

@@ -1,4 +1,4 @@
-from ._get_cookies import get_gdrive_cookies
+from BCC.items import ClassMainPage, Section
 from bs4 import BeautifulSoup
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import Rule
@@ -20,26 +20,31 @@ class ClassesSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
-        section = {'title': "", 'link': "", 'content': {}}
+        section = Section(title = "", url = "", content = {},
+                          is_placeholder = False)
         if not self.parse_started:
-            new_section = {}
+            new_section = Section(title = "", url = "", content = {},
+                              is_placeholder = True)
             self.parse_started = True
         for a in response.css('#region-main').css('a'):
-            if len(new_section) != 0:
+            if not new_section.get('is_placeholder', 
+                                  len(new_section.get('url', "")) != 0):
                 section = new_section
-                new_section = {}
+                new_section = Section(title = "", url = "", content = {},
+                                  is_placeholder = True)
 
             spans = a.css('span')
             if len(spans) == 0:
-                if section["link"] == "":
+                if section["url"] == "":
                     section["title"] = a.css("::text").get()
-                    section["link"] = a.attrib["href"]
+                    section["url"] = a.attrib["href"]
                 else:
-                    new_section = {
-                        'title': a.css("::text").get(),
-                        'link': a.attrib["href"],
-                        'content': {}
-                    }
+                    new_section = Section(
+                        title = a.css("::text").get(),
+                        url = a.attrib["href"],
+                        content = {},
+                        is_placeholder = False
+                    )
                     yield section
             for s in spans:
                 if s.attrib['class'] == 'instancename':
