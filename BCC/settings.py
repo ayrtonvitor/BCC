@@ -87,4 +87,11 @@ ROBOTSTXT_OBEY = True
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
 
+#export data with utf-8 encoding
 FEED_EXPORT_ENCODING = 'utf-8'
+
+#RUN SCRAPY IN BREADTH-FIRST ORDER
+#makes it easier to keep page structure for reproduction
+DEPTH_PRIORITY = 1
+SCHEDULER_DISK_QUEUE = 'scrapy.squeues.PickleFifoDiskQueue'
+SCHEDULER_MEMORY_QUEUE = 'scrapy.squeues.FifoMemoryQueue'
