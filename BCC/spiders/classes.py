@@ -15,14 +15,34 @@ class ClassesSpider(scrapy.Spider):
         with open(URLS_PATH, 'r') as f:
             urls.append(f.readline().strip())
 
+        self.parse_started = False
         for url in urls:
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        section = {'title': "", 'link': "", 'content': {}}
+        if not self.parse_started:
+            new_section = {}
+            self.parse_started = True
         for a in response.css('#region-main').css('a'):
-            for s in a.css('span'):
-                if s.attrib['class'] == 'instancename':
-                    print(a.css('span::text').get())
-            print(a.attrib['href'])
-            print()
+            if len(new_section) != 0:
+                section = new_section
+                new_section = {}
 
+            spans = a.css('span')
+            if len(spans) == 0:
+                if section["link"] == "":
+                    section["title"] = a.css("::text").get()
+                    section["link"] = a.attrib["href"]
+                else:
+                    new_section = {
+                        'title': a.css("::text").get(),
+                        'link': a.attrib["href"],
+                        'content': {}
+                    }
+                    yield section
+            for s in spans:
+                if s.attrib['class'] == 'instancename':
+                    section["content"][s.css("::text").get()] = a.attrib['href']
+                    break
+        yield section
