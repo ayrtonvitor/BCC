@@ -20,6 +20,8 @@ class ClassesSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+        page = ClassMainPage(url = response.url, title =
+                             response.css("h1::text").get(), content = [])
         section = Section(title = "", url = "", content = {},
                           is_placeholder = False)
         if not self.parse_started:
@@ -27,7 +29,7 @@ class ClassesSpider(scrapy.Spider):
                               is_placeholder = True)
             self.parse_started = True
         for a in response.css('#region-main').css('a'):
-            if not new_section.get('is_placeholder', 
+            if not new_section.get('is_placeholder',
                                   len(new_section.get('url', "")) != 0):
                 section = new_section
                 new_section = Section(title = "", url = "", content = {},
@@ -45,9 +47,14 @@ class ClassesSpider(scrapy.Spider):
                         content = {},
                         is_placeholder = False
                     )
+
+                    page['content'].append(section)
                     yield section
+
             for s in spans:
                 if s.attrib['class'] == 'instancename':
                     section["content"][s.css("::text").get()] = a.attrib['href']
                     break
+
+        page['content'].append(section)
         yield section

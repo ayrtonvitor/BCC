@@ -14,4 +14,4 @@ class Section(scrapy.Item):
 class ClassMainPage(scrapy.Item):
     url = scrapy.Field()
     title = scrapy.Field()
-    content = Section
+    content = scrapy.Field()
