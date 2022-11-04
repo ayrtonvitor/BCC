@@ -10,6 +10,7 @@ class Section(scrapy.Item):
     title = scrapy.Field()
     content = scrapy.Field()
     is_placeholder = scrapy.Field()
+    section_text = scrapy.Field()
 
 class ClassMainPage(scrapy.Item):
     url = scrapy.Field()
