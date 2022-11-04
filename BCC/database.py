@@ -4,7 +4,7 @@ connection = sqlite3.connect('db.sqlite3')
 cursor = connection.cursor()
 
 cursor.execute("""
-               CREATE TABLE pages (
+               CREATE TABLE IF NOT EXISTS pages (
                    class_code TEXT,
                    title TEXT NOT NULL,
                    url TEXT NOT NULL,
@@ -13,7 +13,7 @@ cursor.execute("""
                """)
 
 cursor.execute("""
-               CREATE TABLE page_sections (
+               CREATE TABLE IF NOT EXISTS page_sections (
                    class_code TEXT,
                    title TEXT NOT NULL,
                    section_text TEXT,
@@ -25,7 +25,7 @@ cursor.execute("""
                """)
 
 cursor.execute("""
-               CREATE TABLE redirections (
+               CREATE TABLE IF NOT EXISTS redirections (
                    inner_redirect_link TEXT NOT NULL,
                    class_code TEXT NOT NULL,
                    section_order INTEGER NOT NULL,
@@ -36,7 +36,7 @@ cursor.execute("""
                """)
 
 cursor.execute("""
-                CREATE TABLE outter_links (
+                CREATE TABLE IF NOT EXISTS outter_links (
                     url TEXT NOT NULL,
                     class_code TEXT NOT NULL,
                     section_order INTEGER NOT NULL,
@@ -47,7 +47,7 @@ cursor.execute("""
                """)
 
 cursor.execute("""
-                CREATE TABLE Downloads (
+                CREATE TABLE IF NOT EXISTS Downloads (
                     url TEXT NOT NULL,
                     is_gdrive INTEGER NOT NULL,
                     class_code TEXT NOT NULL,
